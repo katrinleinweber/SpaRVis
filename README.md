@@ -1,7 +1,6 @@
-### SpaRVis: Visualisierung Ihres Sparkassen-Girokonto
+### SpaRVis: Visualisierung Ihres Sparkassen-Girokontos
 
-Dieses R-Skript fast die monatlichen Kontoauszugs-CSV-Dateien der
-Sparkasse zusammen.
+Dieses R-Skript fast die monatlichen Kontoauszugs-CSV-Dateien der Sparkasse zusammen und visualiert die Beträge der Buchungen.
 
 ##### Anleitung
 
