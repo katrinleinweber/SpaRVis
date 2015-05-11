@@ -8,7 +8,7 @@ Startguthaben <- 0
 
 print("Bitte eine der 'Konto...CVS'-Dateien auswaehlen. Egal, welche. Allerdings muessen alle diese Dateien im gleichen Ordner liegen, nachdem Sie sie aus dem Onlinepostfachs Ihres Sparkassen-Girokontos heruntergeladen haben.")
 setwd(dirname(file.choose()))
-SK_Dateien <- list.files(pattern = "Konto_[0-9]{8}-Auszug_[0-9]{4}_[0-9]{3}.CSV")
+SK_Dateien <- list.files(pattern = "Konto_[0-9]{8,9}-Auszug_[0-9]{4}_[0-9]{3}.CSV")
 
 # use summary file if available & create if not, instead of reading files individually
 SK_Gesamtdatei <- "Konto_00000000-Auszug_0000_000.csv"
