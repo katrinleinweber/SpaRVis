@@ -6,7 +6,7 @@ library(scales) # date_format
 
 Startguthaben <- 0
 
-print("Bitte eine der 'Konto...CVS'-Dateien auswaehlen. Egal, welche. Allerdings muessen alle diese Dateien im gleichen Ordner liegen, nachdem Sie sie aus dem Onlinepostfachs Ihres Sparkassen-Girokontos heruntergeladen haben.")
+print("Bitte eine der 'Konto...CSV'-Dateien auswaehlen. Egal, welche. Allerdings muessen alle diese Dateien im gleichen Ordner liegen, nachdem Sie sie aus dem Onlinepostfachs Ihres Sparkassen-Girokontos heruntergeladen haben.")
 setwd(dirname(file.choose()))
 
 SK_CSVs_einlesen <- function(CVS_Namen) {
@@ -29,7 +29,7 @@ SK_roh_neu <- SK_CSVs_einlesen("Konto_[0-9]{8,9}-Auszug_[0-9]{4}_[0-9]{3}_csv.cs
 names(SK_roh_alt) <- names(SK_roh_neu)
 SK_roh <- rbind(SK_roh_alt, SK_roh_neu)
 write.csv2(SK_roh, SK_Gesamtdatei)
-# ..fs = Gesamtdatei / files summarised
+
 
 # mache Spalten nützlicher
 SK_roh <- SK_roh[order(abs(SK_roh$Betrag), decreasing = TRUE),]
@@ -102,7 +102,7 @@ for(i in 2:length(SK_Monatsdaten$Monatsguthaben)) {
 
 SK_Guthaben <- ggplot(SK_Monatsdaten, aes(Valutazeitraum, Monatsguthaben, size = Monatsguthaben))
 SK_Guthaben +
-  geom_point(color = "#ED8C3B") + # Flattr orange
+  geom_point(color = "#ED8C3B") + # Flattr orange from https://github.com/KonScience/Summarize-Flattr-Reports/commit/48159efa60a5e3e06c312f59794cdb88ff152a91?diff=split#diff-aecf3d2d8db8e5ca05c6f01653041e00R109
   stat_smooth(color = "#ED8C3B") +
   scale_x_date(breaks = "1 month", labels = date_format("\'%y %b")) +
   labs(x = NULL, y = "Guthaben (EUR)") +
