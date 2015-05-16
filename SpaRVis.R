@@ -8,12 +8,26 @@ Startguthaben <- 0
 
 print("Bitte eine der 'Konto...CVS'-Dateien auswaehlen. Egal, welche. Allerdings muessen alle diese Dateien im gleichen Ordner liegen, nachdem Sie sie aus dem Onlinepostfachs Ihres Sparkassen-Girokontos heruntergeladen haben.")
 setwd(dirname(file.choose()))
-SK_Dateien <- list.files(pattern = "Konto_[0-9]{8,9}-Auszug_[0-9]{4}_[0-9]{3}.CSV")
+
+SK_CSVs_einlesen <- function(CVS_Namen) {
+  SK_Dateien <- list.files(pattern = CVS_Namen)
+  SK_Daten <- do.call("rbind",
+                      lapply(SK_Dateien,
+                             read.csv2,
+                             stringsAsFactors = FALSE,
+                             encoding = "latin1"
+                             )
+                      )
+  return(SK_Daten)
+}
 
 # use summary file if available & create if not, instead of reading files individually
 SK_Gesamtdatei <- "Konto_00000000-Auszug_0000_000.csv"
 # try(data_SK_known <- read.csv2(SK_Gesamtdatei))
-SK_roh <- do.call("rbind", lapply(SK_Dateien, read.csv2, stringsAsFactors = FALSE))
+SK_roh_alt <- SK_CSVs_einlesen("Konto_[0-9]{8,9}-Auszug_[0-9]{4}_[0-9]{3}.CSV")
+SK_roh_neu <- SK_CSVs_einlesen("Konto_[0-9]{8,9}-Auszug_[0-9]{4}_[0-9]{3}_csv.csv")
+names(SK_roh_alt) <- names(SK_roh_neu)
+SK_roh <- rbind(SK_roh_alt, SK_roh_neu)
 write.csv2(SK_roh, SK_Gesamtdatei)
 # ..fs = Gesamtdatei / files summarised
 
