@@ -5,8 +5,11 @@ library(plyr)
 library(scales) # date_format
 
 Startguthaben <- 0
+Guthaben_Farbe <- "#ED8C3B" # Flattr orange from https://github.com/KonScience/Summarize-Flattr-Reports/commit/48159efa60a5e3e06c312f59794cdb88ff152a91?diff=split#diff-aecf3d2d8db8e5ca05c6f01653041e00R109
+Einnahmenfarbe <- "blue"
+Ausgabenfarbe <- "red"
 
-print("Bitte eine der 'Konto...CSV'-Dateien auswaehlen. Egal, welche. Allerdings muessen alle diese Dateien im gleichen Ordner liegen, nachdem Sie sie aus dem Onlinepostfachs Ihres Sparkassen-Girokontos heruntergeladen haben.")
+print("Bitte eine der 'Konto...CSV'-Dateien auswählen. Egal welche. Allerdings müssen alle diese Dateien im gleichen Ordner liegen, nachdem Sie sie aus dem Onlinepostfachs Ihres Sparkassen-Girokontos heruntergeladen haben.")
 setwd(dirname(file.choose()))
 
 SK_CSVs_einlesen <- function(CVS_Namen) {
@@ -50,8 +53,8 @@ for(i in 1:length(SK_roh$Betrag)) {
 Zoom <- 1 # Faktor, um die größten Einnahmen und Ausgaben von der y-Achse auszublenden
 SKpr <- ggplot(SK_roh, aes(Valutadatum))
 SKpr +
-  geom_point(alpha = 0.5, aes(y = SK_roh$Einnahme, size = abs(SK_roh$Einnahme)), color = "blue") +
-  geom_point(alpha = 0.5, aes(y = SK_roh$Ausgabe, size = abs(SK_roh$Ausgabe)), color = "red") +
+  geom_point(alpha = 0.5, aes(y = SK_roh$Einnahme, size = abs(SK_roh$Einnahme)), color = Einnahmenfarbe) +
+  geom_point(alpha = 0.5, aes(y = SK_roh$Ausgabe, size = abs(SK_roh$Ausgabe)), color = Ausgabenfarbe) +
   scale_x_date(breaks = "1 month", labels = date_format("\'%y %b")) +
   scale_y_continuous(limits = c(min(SK_roh$Betrag)/Zoom, max(SK_roh$Betrag)/Zoom)) +
   labs(x = "Valuta", y = "Betrag (EUR)", size = "Betrag (EUR)") +
@@ -81,10 +84,10 @@ for(i in 1:length(SK_Monatsdaten$Monatsbetrag)) {
   else if(SK_Monatsdaten$Monatsbetrag[i] > 0) SK_Monatsdaten$Monatplus[i] <- SK_Monatsdaten$Monatsbetrag[i]
 }
 
-SK_Monatsdiagram <- ggplot(SK_Monatsdaten, aes(Valutazeitraum))
+SK_Monatsdiagram <- ggplot(SK_Monatsdaten, aes(Valutazeitraum, Monatplus, size = abs(Monatplus)))
 SK_Monatsdiagram +
-  geom_point(alpha = 0.5, aes(y = SK_Monatsdaten$Monatplus, size = abs(SK_Monatsdaten$Monatplus)), color = "blue") +
-  geom_point(alpha = 0.5, aes(y = SK_Monatsdaten$Monatminus, size = abs(SK_Monatsdaten$Monatminus)), color = "red") +
+  geom_point(alpha = 0.5, color = Einnahmenfarbe)  +
+  geom_point(alpha = 0.5, data = SK_Monatsdaten, aes(y = Monatminus, size = abs(Monatminus)), color = Ausgabenfarbe) +
   scale_x_date(breaks = "1 month", labels = date_format("\'%y %b")) +
   labs(x = "Valutamonat", y = "Betrag (EUR)", size = "Betrag (EUR)") +
   theme_classic() +
@@ -100,10 +103,10 @@ for(i in 2:length(SK_Monatsdaten$Monatsguthaben)) {
   SK_Monatsdaten$Monatsguthaben[i] <- SK_Monatsdaten$Monatsguthaben [i-1]+ SK_Monatsdaten$Monatsbetrag[i]
 }
 
-SK_Guthaben <- ggplot(SK_Monatsdaten, aes(Valutazeitraum, Monatsguthaben, size = Monatsguthaben))
+SK_Guthaben <- ggplot(SK_Monatsdaten, aes(Valutazeitraum, Monatsguthaben, size = abs(Monatsguthaben)))
 SK_Guthaben +
-  geom_point(color = "#ED8C3B") + # Flattr orange from https://github.com/KonScience/Summarize-Flattr-Reports/commit/48159efa60a5e3e06c312f59794cdb88ff152a91?diff=split#diff-aecf3d2d8db8e5ca05c6f01653041e00R109
-  stat_smooth(color = "#ED8C3B") +
+  geom_point(color = Guthaben_Farbe) +
+  stat_smooth(color = Guthaben_Farbe) +
   scale_x_date(breaks = "1 month", labels = date_format("\'%y %b")) +
   labs(x = NULL, y = "Guthaben (EUR)") +
   theme_classic() +
