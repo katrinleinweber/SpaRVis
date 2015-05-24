@@ -120,3 +120,28 @@ SK_Guthaben +
   theme(axis.text.x = element_text(angle = 30, hjust = 1),
         legend.position = "none")
 ggsave("SpaRVis-Guthaben.png")
+
+
+# visualisiere Zahlungsquellen & -empfänger
+# [ ] x-Achsenbeschriftung in die Mitte, oder Diagramm aufteilen
+# [ ] Farbschema angleichen
+
+SK_Zahlungsdaten <- ddply(SK_roh,
+                          c("Beguenstigter_Zahlungspflichtiger", "Betragstyp"),
+                          summarise,
+                          Betraege = sum(Betrag),
+                          Einnahmen = sum(Einnahme),
+                          Ausgaben = sum(Ausgabe))
+
+SK_Zahlungen <- ggplot(SK_Zahlungsdaten,
+                       aes(reorder(Beguenstigter_Zahlungspflichtiger, Betraege), fill = Betragstyp))
+SK_Zahlungen +
+  geom_bar(stat = "identity", aes(y = Einnahmen)) +
+  geom_bar(stat = "identity", aes(y = Ausgaben)) +
+  coord_flip() +
+  labs(x = "Zahlungsquelle- oder empfänger", y = "Betrag") +
+  theme_minimal() +
+  theme(legend.position = "none")
+ggsave("SpaRVis_Zahlungen.png", limitsize = FALSE,
+       height = length(unique(SK_Zahlungsdaten$Beguenstigter_Zahlungspflichtiger))/10,
+       width = max(SK_Zahlungsdaten$Betraege)/1000)
