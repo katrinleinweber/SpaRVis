@@ -61,11 +61,12 @@ SKpr <- ggplot(SK_roh, aes(Valutadatum))
 SKpr +
   geom_point(alpha = 0.5, aes(y = SK_roh$Einnahme, size = abs(SK_roh$Einnahme)), color = Einnahmenfarbe) +
   geom_point(alpha = 0.5, aes(y = SK_roh$Ausgabe, size = abs(SK_roh$Ausgabe)), color = Ausgabenfarbe) +
-  scale_x_date(breaks = "1 month", labels = date_format("\'%y %b")) +
+  scale_x_date(breaks = "3 months", labels = date_format("\'%y %b")) +
   scale_y_continuous(limits = c(min(SK_roh$Betrag)/Zoom, max(SK_roh$Betrag)/Zoom)) +
   labs(x = "Valuta", y = "Betrag (EUR)", size = "Betrag (EUR)") +
   theme_classic() +
-  theme(axis.text.x = element_text(angle = 30))
+  theme(axis.text.x = element_text(angle = 30, hjust = 1),
+        legend.position = "top")
 ggsave("SpaRVis-Buchungen.png")
 
 
@@ -94,10 +95,10 @@ SK_Monatsdiagram <- ggplot(SK_Monatsdaten, aes(Valutazeitraum, Monatplus, size =
 SK_Monatsdiagram +
   geom_point(alpha = 0.5, color = Einnahmenfarbe)  +
   geom_point(alpha = 0.5, data = SK_Monatsdaten, aes(y = Monatminus, size = abs(Monatminus)), color = Ausgabenfarbe) +
-  scale_x_date(breaks = "1 month", labels = date_format("\'%y %b")) +
+  scale_x_date(breaks = "3 months", labels = date_format("\'%y %b")) +
   labs(x = "Valutamonat", y = "Betrag (EUR)", size = "Betrag (EUR)") +
   theme_classic() +
-  theme(axis.text.x = element_text(angle = 30))
+  theme(axis.text.x = element_text(angle = 30, hjust = 1))
 ggsave("SpaRVis-Monatsbeträge.png")
 
 
@@ -113,9 +114,9 @@ SK_Guthaben <- ggplot(SK_Monatsdaten, aes(Valutazeitraum, Monatsguthaben, size =
 SK_Guthaben +
   geom_point(color = Guthaben_Farbe) +
   stat_smooth(color = Guthaben_Farbe) +
-  scale_x_date(breaks = "1 month", labels = date_format("\'%y %b")) +
+  scale_x_date(breaks = "3 months", labels = date_format("\'%y %b")) +
   labs(x = NULL, y = "Guthaben (EUR)") +
   theme_classic() +
-  theme(axis.text.x = element_text(angle = 30),
+  theme(axis.text.x = element_text(angle = 30, hjust = 1),
         legend.position = "none")
 ggsave("SpaRVis-Guthaben.png")
