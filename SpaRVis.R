@@ -3,6 +3,7 @@ library(ggplot2)
 library(lubridate) # year, month & day
 library(plyr)
 library(scales) # date_format
+Sys.setlocale("LC_ALL", "UTF-8")
 
 Startguthaben <- 0
 Guthaben_Farbe <- "#ED8C3B" # Flattr orange from https://github.com/KonScience/Summarize-Flattr-Reports/commit/48159efa60a5e3e06c312f59794cdb88ff152a91?diff=split#diff-aecf3d2d8db8e5ca05c6f01653041e00R109
@@ -17,20 +18,18 @@ SK_CSVs_einlesen <- function(CVS_Namen) {
   SK_Daten <- do.call("rbind",
                       lapply(SK_Dateien,
                              read.csv2,
-                             stringsAsFactors = FALSE,
                              encoding = "latin1"
                              )
                       )
+  names(SK_Daten) <- c("Auftragskonto", "Buchungstag", "Valutadatum", "Buchungstext", "Verwendungszweck", "Beguenstigter_Zahlungspflichtiger", "Kontonummer", "BLZ", "Betrag", "Waehrung", "Info")
   return(SK_Daten)
 }
 
 # use summary file if available & create if not, instead of reading files individually
 SK_Gesamtdatei <- "Konto_00000000-Auszug_0000_000.csv"
 # try(data_SK_known <- read.csv2(SK_Gesamtdatei))
-SK_roh_alt <- SK_CSVs_einlesen("Konto_[0-9]{8,9}-Auszug_[0-9]{4}_[0-9]{3}.CSV")
-SK_roh_neu <- SK_CSVs_einlesen("Konto_[0-9]{8,9}-Auszug_[0-9]{4}_[0-9]{3}_csv.csv")
-names(SK_roh_alt) <- names(SK_roh_neu)
-SK_roh <- rbind(SK_roh_alt, SK_roh_neu)
+SK_roh <- rbind(SK_CSVs_einlesen("Konto_[0-9]{8,9}-Auszug_[0-9]{4}_[0-9]{3}.CSV"),
+                SK_CSVs_einlesen("Konto_[0-9]{8,9}-Auszug_[0-9]{4}_[0-9]{3}_csv.csv"))
 write.csv2(SK_roh, SK_Gesamtdatei)
 
 
