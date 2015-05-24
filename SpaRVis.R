@@ -44,9 +44,16 @@ SK_roh$Einnahme <- as.numeric("")
 
 # spalte Beträge in Einkommen und Ausgaben
 for(i in 1:length(SK_roh$Betrag)) {
-  if(SK_roh$Betrag[i] < 0) SK_roh$Ausgabe[i] <- SK_roh$Betrag[i]
-  else if(SK_roh$Betrag[i] > 0) SK_roh$Einnahme[i] <- SK_roh$Betrag[i]
+  if(SK_roh$Betrag[i] < 0) {
+    SK_roh$Ausgabe[i] <- SK_roh$Betrag[i]
+    SK_roh$Betragstyp[i] <- "Ausgabe"
+  }
+  else if(SK_roh$Betrag[i] > 0) {
+    SK_roh$Einnahme[i] <- SK_roh$Betrag[i]
+    SK_roh$Betragstyp[i] <- "Einnahme"
+  }
 }
+SK_roh$Betragstyp <- as.factor(SK_roh$Betragstyp)
 
 # male alle Buchungen, evtl. mit Zoom zu kleineren Buchungen
 Zoom <- 1 # Faktor, um die größten Einnahmen und Ausgaben von der y-Achse auszublenden
