@@ -67,7 +67,7 @@ SKpr +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 30, hjust = 1),
         legend.position = "top")
-ggsave("SpaRVis-Buchungen.png")
+ggsave("SpaRVis-Buchungen.pdf")
 
 
 # fasse nach Monaten zusammen & male Monatsbeträge
@@ -99,7 +99,7 @@ SK_Monatsdiagram +
   labs(x = "Valutamonat", y = "Betrag (EUR)", size = "Betrag (EUR)") +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 30, hjust = 1))
-ggsave("SpaRVis-Monatsbeträge.png")
+ggsave("SpaRVis-Monatsbeträge.pdf")
 
 
 # addiere Start- zu Monatsguthaben, berechne -entwicklung & male
@@ -119,7 +119,7 @@ SK_Guthaben +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 30, hjust = 1),
         legend.position = "none")
-ggsave("SpaRVis-Guthaben.png")
+ggsave("SpaRVis-Guthaben.pdf")
 
 
 # visualisiere Zahlungsquellen & -empfänger
@@ -134,7 +134,8 @@ SK_Zahlungsdaten <- ddply(SK_roh,
                           Ausgaben = sum(Ausgabe))
 
 SK_Zahlungen <- ggplot(SK_Zahlungsdaten,
-                       aes(reorder(Beguenstigter_Zahlungspflichtiger, Betraege), fill = Betragstyp))
+                       aes(reorder(Beguenstigter_Zahlungspflichtiger, Betraege), # learned from http://stackoverflow.com/a/16968999
+                           fill = Betragstyp))
 SK_Zahlungen +
   geom_bar(stat = "identity", aes(y = Einnahmen)) +
   geom_bar(stat = "identity", aes(y = Ausgaben)) +
@@ -142,6 +143,7 @@ SK_Zahlungen +
   labs(x = "Zahlungsquelle- oder empfänger", y = "Betrag") +
   theme_minimal() +
   theme(legend.position = "none")
-ggsave("SpaRVis_Zahlungen.png", limitsize = FALSE,
+ggsave("SpaRVis_Zahlungen.pdf", limitsize = FALSE,
        height = length(unique(SK_Zahlungsdaten$Beguenstigter_Zahlungspflichtiger))/10,
        width = max(SK_Zahlungsdaten$Betraege)/1000)
+
