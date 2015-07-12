@@ -32,6 +32,9 @@ SK_roh <- rbind(SK_CSVs_einlesen("Konto_[0-9]{8,9}-Auszug_[0-9]{4}_[0-9]{3}.CSV"
                 SK_CSVs_einlesen("Konto_[0-9]{8,9}-Auszug_[0-9]{4}_[0-9]{3}_csv.csv"))
 write.csv2(SK_roh, SK_Gesamtdatei)
 
+# ignoriere Groß- & Kleinschreibung
+SK_roh$Beguenstigter_Zahlungspflichtiger <- tolower(SK_roh$Beguenstigter_Zahlungspflichtiger)
+SK_roh$Verwendungszweck <- tolower(SK_roh$Verwendungszweck)
 
 # mache Spalten nützlicher
 SK_roh <- SK_roh[order(abs(SK_roh$Betrag), decreasing = TRUE),]
